@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelola Estimasi - Udin Cleaning Shoes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 2rem;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #003366;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: center;
+      vertical-align: middle;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #003366;
+      color: white;
+    }
+
+    .foto img {
+      max-width: 80px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .status-menunggu {
+      color: #003366;
+    }
+
+    .status-diproses {
+      color: #4CAF50;
+    }
+
+    .status-selesai {
+      color: #007bff;
+    }
+
+    .status-update {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .status-update select, 
+    .status-update button {
+      width: 100%;
+      max-width: 150px;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button {
+      background-color: #003366;
+      color: white;
+      border: none;
+      padding: 0.7rem;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      max-width: 150px;
+    }
+
+    button:hover {
+      background-color: #00224d;
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #003366;
+    }
+
+    @media screen and (max-width: 768px) {
+      table {
+        font-size: 14px;
+      }
+
+      .status-update select, 
+      .status-update button {
+        max-width: 100%;
+      }
+
+      th, td {
+        padding: 0.6rem;
+      }
+
+      .foto img {
+        max-width: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Kelola Estimasi</h2>
+    <div id="transaksi-list">
+      <div class="loading">Memuat data pemesanan...</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4iENZs-AuyD2gLGkooV5bbRlaQq58Wn4",
+      authDomain: "websitesepatu-ad623.firebaseapp.com",
+      projectId: "websitesepatu-ad623",
+      storageBucket: "websitesepatu-ad623.appspot.com",
+      messagingSenderId: "824822131041",
+      appId: "1:824822131041:web:dcfb1626dbeca123f43d20"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    loadRiwayatSemuaPesanan();
+
+    async function loadRiwayatSemuaPesanan() {
+      const transaksiList = document.getElementById("transaksi-list");
+      transaksiList.innerHTML = "<div class='loading'>Memuat riwayat transaksi...</div>";
+
+      const transaksiRef = ref(db, "pesanan");
+
+      try {
+        const snapshot = await get(transaksiRef);
+
+        if (!snapshot.exists()) {
+          transaksiList.innerHTML = "<p>Riwayat transaksi kosong.</p>";
+          return;
+        }
+
+        transaksiList.innerHTML = "";
+        const data = snapshot.val();
+
+        let tableContent = `
+          <table>
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Alamat</th>
+                <th>Layanan</th>
+                <th>Harga</th>
+                <th>Metode Pembayaran</th>
+                <th>Tanggal</th>
+                <th>Status</th>
+                <th>Foto Sepatu</th>
+                <th>Bukti Pembayaran</th>
+                <th>Update Status</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        for (let id in data) {
+          const transaksi = data[id];
+
+          const statusClass = getStatusClass(transaksi.status);
+
+          tableContent += `
+            <tr>
+              <td>${transaksi.nama ?? "Tidak tersedia"}</td>
+              <td>${transaksi.alamat ?? "Tidak tersedia"}</td>
+              <td>${transaksi.layanan ?? "Tidak tersedia"}</td>
+              <td>Rp ${transaksi.harga?.toLocaleString() ?? "0"}</td>
+              <td>${transaksi.metode ?? "Tidak tersedia"}</td>
+              <td>${transaksi.tanggalPemesanan ?? "-"}</td>
+              <td class="${statusClass}">${transaksi.status ?? "Tidak tersedia"}</td>
+              <td class="foto">
+                ${transaksi.fotoBase64 ? `<img src="${transaksi.fotoBase64}" alt="Foto Sepatu" />` : 'Tidak ada foto'}
+              </td>
+              <td class="foto">
+                ${transaksi.buktiPembayaran ? `<img src="${transaksi.buktiPembayaran}" alt="Bukti Pembayaran" />` : 'Belum Ada Bukti'}
+              </td>
+              <td class="status-update">
+                <select id="status-select-${id}">
+                  <option value="Menunggu Pembayaran" ${transaksi.status === "Menunggu Pembayaran" ? "selected" : ""}>Menunggu Pembayaran</option>
+                  <option value="Pesanan Diproses" ${transaksi.status === "Pesanan Diproses" ? "selected" : ""}>Pesanan Diproses</option>
+                  <option value="Sepatu Telah Selesai" ${transaksi.status === "Sepatu Telah Selesai" ? "selected" : ""}>Sepatu Telah Selesai</option>
+                </select>
+                <button onclick="updateStatus('${id}')">Perbarui Status</button>
+              </td>
+            </tr>
+          `;
+        }
+
+        tableContent += `
+            </tbody>
+          </table>
+        `;
+
+        transaksiList.innerHTML = tableContent;
+      } catch (error) {
+        console.error("Gagal memuat data:", error);
+        transaksiList.innerHTML = "<p>Gagal memuat transaksi.</p>";
+      }
+    }
+
+    function getStatusClass(status) {
+      if (status === "Menunggu Pembayaran") return "status-menunggu";
+      if (status === "Pesanan Diproses") return "status-diproses";
+      if (status === "Sepatu Telah Selesai") return "status-selesai";
+      return "";
+    }
+
+    window.updateStatus = function(orderId) {
+      const statusSelect = document.getElementById(`status-select-${orderId}`);
+      const newStatus = statusSelect.value;
+
+      const transaksiRef = ref(db, `pesanan/${orderId}`);
+      
+      update(transaksiRef, { status: newStatus })
+        .then(() => {
+          alert('Status pesanan berhasil diperbarui!');
+          loadRiwayatSemuaPesanan();
+        })
+        .catch((error) => {
+          console.error("Gagal memperbarui status:", error);
+          alert('Gagal memperbarui status!');
+        });
+    }
+  </script>
+
+</body>
+</html>

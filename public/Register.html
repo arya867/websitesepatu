@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Form Registrasi - Udin Cleaning Shoes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f9;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #0f2337; /* Biru */
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .gender-group {
+      margin-bottom: 20px;
+    }
+
+    .gender-group input[type="radio"] {
+      margin-right: 10px;
+      display: inline-block;
+    }
+
+    .gender-group label {
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #003366; /* Biru */
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background-color:  #003366; /* Biru Gelap */
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    footer p {
+      color: #003366; /* Biru */
+    }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4iENZs-AuyD2gLGkooV5bbRlaQq58Wn4",
+      authDomain: "websitesepatu-ad623.firebaseapp.com",
+      projectId: "websitesepatu-ad623",
+      storageBucket: "websitesepatu-ad623.appspot.com",
+      messagingSenderId: "824822131041",
+      appId: "1:824822131041:web:dcfb1626dbeca123f43d20"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    document.getElementById("register-form").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const nama = document.getElementById("nama").value;
+      const alamat = document.getElementById("alamat").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const jenisKelamin = document.querySelector('input[name="jenis_kelamin"]:checked').value;
+      const noTelepon = document.getElementById("no-telepon").value;
+
+      try {
+        // Mendaftar pengguna baru
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Menyimpan data pengguna ke Firestore dengan peran 'pelanggan'
+        await setDoc(doc(db, "pengguna", user.uid), {
+          nama,
+          alamat,
+          email,
+          jenisKelamin,
+          noTelepon,
+          peran: "pelanggan"  // Menambahkan peran 'pelanggan'
+        });
+
+        alert("Registrasi berhasil!");
+        window.location.href = "login.html";  // Redirect ke halaman login setelah registrasi berhasil
+      } catch (error) {
+        alert("Terjadi kesalahan: " + error.message);
+        console.error(error);
+      }
+    });
+  </script>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Form Registrasi</h1>
+
+    <form id="register-form">
+      <label for="nama">Nama Lengkap</label>
+      <input type="text" id="nama" name="nama" required />
+
+      <label for="alamat">Alamat</label>
+      <textarea id="alamat" name="alamat" rows="4" required></textarea>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+
+      <label>Jenis Kelamin</label>
+      <div class="gender-group">
+        <input type="radio" id="laki-laki" name="jenis_kelamin" value="Laki-Laki" required />
+        <label for="laki-laki">Laki-Laki</label>
+        
+        <input type="radio" id="perempuan" name="jenis_kelamin" value="Perempuan" required />
+        <label for="perempuan">Perempuan</label>
+      </div>
+
+      <label for="no-telepon">Nomor Telepon</label>
+      <input type="number" id="no-telepon" name="no_telepon" min="1000000000" max="999999999999999" required />
+
+      <button type="submit" class="submit-btn">Daftar</button>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Udin Cleaning Shoes. Semua hak cipta dilindungi.</p>
+  </footer>
+
+</body>
+</html>

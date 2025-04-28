@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Halaman Utama - Udin Cleaning Shoes</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color:  #003366;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 0;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .sidebar a:hover {
+      background-color:  #003366;
+      padding-left: 10px;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      background-color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .logout-btn {
+      background-color:  #003366;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .logout-btn:hover {
+      background-color:  #003366;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .content h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .content p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <a href="profil.html">Profil</a>
+    <a href="pemesanan.html">Pesan</a>
+    <a href="riwayat.html">Riwayat Transaksi</a>
+  </div>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    <div class="content">
+      <h1>Selamat Datang di Udin Cleaning Shoes</h1>
+      <p>Pilih menu di samping untuk melihat informasi profil, layanan yang tersedia, atau riwayat transaksi Anda.</p>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4iENZs-AuyD2gLGkooV5bbRlaQq58Wn4",
+      authDomain: "websitesepatu-ad623.firebaseapp.com",
+      projectId: "websitesepatu-ad623",
+      storageBucket: "websitesepatu-ad623.appspot.com",
+      messagingSenderId: "824822131041",
+      appId: "1:824822131041:web:dcfb1626dbeca123f43d20"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Cek apakah user sudah login
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Jika belum login, redirect ke login.html
+        window.location.href = "login.html";
+      }
+    });
+
+    // Logout
+    window.logout = function () {
+      signOut(auth).then(() => {
+        alert("Anda telah logout.");
+        window.location.href = "login.html";
+      }).catch((error) => {
+        console.error("Gagal logout:", error);
+        alert("Gagal logout: " + error.message);
+      });
+    };
+  </script>
+
+</body>
+</html>

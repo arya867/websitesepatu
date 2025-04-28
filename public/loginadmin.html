@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Admin - Udin Cleaning Shoes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      color: #003366; /* Biru Tua */
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      background: #003366; /* Biru Tua */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0066cc; /* Biru Lebih Terang */
+    }
+
+    .error-message {
+      color: red;
+      margin-top: 1rem;
+    }
+
+    .password-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login Admin</h2>
+    <form id="admin-login-form">
+      <input type="email" id="email" placeholder="Email" required />
+      <div class="password-container">
+        <input type="password" id="password" placeholder="Password" required />
+        <span class="eye-icon" id="toggle-password">&#128065;</span> <!-- Mata Icon -->
+      </div>
+      <button type="submit">Login</button>
+      <div class="error-message" id="error-message"></div>
+    </form>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4iENZs-AuyD2gLGkooV5bbRlaQq58Wn4",
+      authDomain: "websitesepatu-ad623.firebaseapp.com",
+      projectId: "websitesepatu-ad623",
+      storageBucket: "websitesepatu-ad623.appspot.com",
+      messagingSenderId: "824822131041",
+      appId: "1:824822131041:web:dcfb1626dbeca123f43d20"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    document.getElementById("admin-login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMessage = document.getElementById("error-message");
+      errorMessage.textContent = "";
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        const userDoc = await getDoc(doc(db, "pengguna", user.uid));
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          if (userData.peran === "admin") {
+            // Arahkan ke dashboard admin
+            window.location.href = "admin.html";
+          } else {
+            errorMessage.textContent = "Akun ini bukan admin.";
+          }
+        } else {
+          errorMessage.textContent = "Data pengguna tidak ditemukan.";
+        }
+      } catch (error) {
+        errorMessage.textContent = "Login gagal: " + error.message;
+      }
+    });
+
+    // Toggle password visibility
+    document.getElementById('toggle-password').addEventListener('click', function () {
+      const passwordField = document.getElementById('password');
+      const type = passwordField.type === 'password' ? 'text' : 'password';
+      passwordField.type = type;
+    });
+  </script>
+</body>
+</html>

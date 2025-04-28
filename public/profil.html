@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil Pengguna - Udin Cleaning Shoes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      color:  #003366;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      background:  #003366;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background:  #003366;
+    }
+
+    .edit-btn {
+      background: #4caf50;
+      color: white;
+      margin-top: 0.5rem;
+      cursor: pointer;
+    }
+
+    .edit-btn:hover {
+      background: #45a049;
+    }
+
+    .save-btn {
+      background:  #003366;
+      color: white;
+      margin-top: 0.5rem;
+      cursor: pointer;
+    }
+
+    .save-btn:hover {
+      background:  #003366;
+    }
+
+    .save-btn {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Profil Pengguna</h2>
+    <form id="profil-form">
+      <label for="nama">Nama</label>
+      <input type="text" id="nama" readonly />
+      <button type="button" class="edit-btn" id="editNamaBtn">Edit Nama</button>
+      <button type="button" class="save-btn" id="saveNamaBtn">Simpan Nama</button>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" readonly />
+      <button type="button" class="edit-btn" id="editEmailBtn">Edit Email</button>
+      <button type="button" class="save-btn" id="saveEmailBtn">Simpan Email</button>
+
+      <label for="alamat">Alamat</label>
+      <input type="text" id="alamat" readonly />
+      <button type="button" class="edit-btn" id="editAlamatBtn">Edit Alamat</button>
+      <button type="button" class="save-btn" id="saveAlamatBtn">Simpan Alamat</button>
+
+      <label for="jenisKelamin">Jenis Kelamin</label>
+      <select id="jenisKelamin" disabled>
+        <option value="L">Laki-laki</option>
+        <option value="P">Perempuan</option>
+      </select>
+      <button type="button" class="edit-btn" id="editJenisKelaminBtn">Edit Jenis Kelamin</button>
+      <button type="button" class="save-btn" id="saveJenisKelaminBtn">Simpan Jenis Kelamin</button>
+    </form>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      updateDoc
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4iENZs-AuyD2gLGkooV5bbRlaQq58Wn4",
+      authDomain: "websitesepatu-ad623.firebaseapp.com",
+      projectId: "websitesepatu-ad623",
+      storageBucket: "websitesepatu-ad623.appspot.com",
+      messagingSenderId: "824822131041",
+      appId: "1:824822131041:web:dcfb1626dbeca123f43d20"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Cek apakah pengguna sudah terautentikasi
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Pengguna terautentikasi, ambil data profil dari Firestore
+        const userDocRef = doc(db, "pengguna", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          
+          // Tampilkan data di form
+          document.getElementById("nama").value = userData.nama || '';
+          document.getElementById("email").value = user.email || '';
+          document.getElementById("alamat").value = userData.alamat || '';
+          document.getElementById("jenisKelamin").value = userData.jenisKelamin || '';
+        } else {
+          console.log("Data pengguna tidak ditemukan!");
+        }
+      } else {
+        // Pengguna tidak terautentikasi, alihkan ke halaman login
+        alert("Silakan login untuk melihat profil.");
+        window.location.href = "login.html"; // Sesuaikan dengan URL halaman login
+      }
+    });
+
+    // Fungsi untuk mengaktifkan input field dan menyembunyikan tombol edit
+    function enableEdit(inputId, buttonId, saveButtonId) {
+      document.getElementById(inputId).removeAttribute("readonly");
+      document.getElementById(inputId).removeAttribute("disabled");
+      document.getElementById(buttonId).style.display = "none";
+      document.getElementById(saveButtonId).style.display = "inline-block";
+    }
+
+    // Fungsi untuk menyimpan perubahan ke Firestore
+    async function saveChanges(fieldId, userFieldName, saveButtonId, editButtonId) {
+      const user = auth.currentUser;
+      const newValue = document.getElementById(fieldId).value;
+
+      if (user) {
+        const userDocRef = doc(db, "pengguna", user.uid);
+        try {
+          await updateDoc(userDocRef, {
+            [userFieldName]: newValue
+          });
+          alert(`${userFieldName} berhasil diperbarui!`);
+          document.getElementById(saveButtonId).style.display = "none"; // Sembunyikan tombol Simpan
+          document.getElementById(editButtonId).style.display = "inline-block"; // Tampilkan tombol Edit kembali
+        } catch (error) {
+          console.error(`Gagal memperbarui ${userFieldName}:`, error);
+        }
+      }
+    }
+
+    // Edit Nama
+    document.getElementById("editNamaBtn").addEventListener("click", () => {
+      enableEdit("nama", "editNamaBtn", "saveNamaBtn");
+      document.getElementById("nama").focus();
+    });
+
+    // Edit Email
+    document.getElementById("editEmailBtn").addEventListener("click", () => {
+      enableEdit("email", "editEmailBtn", "saveEmailBtn");
+      document.getElementById("email").focus();
+    });
+
+    // Edit Alamat
+    document.getElementById("editAlamatBtn").addEventListener("click", () => {
+      enableEdit("alamat", "editAlamatBtn", "saveAlamatBtn");
+      document.getElementById("alamat").focus();
+    });
+
+    // Edit Jenis Kelamin
+    document.getElementById("editJenisKelaminBtn").addEventListener("click", () => {
+      enableEdit("jenisKelamin", "editJenisKelaminBtn", "saveJenisKelaminBtn");
+      document.getElementById("jenisKelamin").removeAttribute("disabled");
+    });
+
+    // Simpan Nama
+    document.getElementById("saveNamaBtn").addEventListener("click", () => {
+      saveChanges("nama", "nama", "saveNamaBtn", "editNamaBtn");
+    });
+
+    // Simpan Email
+    document.getElementById("saveEmailBtn").addEventListener("click", () => {
+      saveChanges("email", "email", "saveEmailBtn", "editEmailBtn");
+    });
+
+    // Simpan Alamat
+    document.getElementById("saveAlamatBtn").addEventListener("click", () => {
+      saveChanges("alamat", "alamat", "saveAlamatBtn", "editAlamatBtn");
+    });
+
+    // Simpan Jenis Kelamin
+    document.getElementById("saveJenisKelaminBtn").addEventListener("click", () => {
+      saveChanges("jenisKelamin", "jenisKelamin", "saveJenisKelaminBtn", "editJenisKelaminBtn");
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laporan Penjualan - Udin Cleaning Shoes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #003366; /* Biru Tua */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #003366; /* Biru Tua */
+      color: white;
+    }
+
+    td {
+      background-color: #f9f9f9;
+    }
+
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      background-color: #003366; /* Biru Tua */
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #002244; /* Biru Gelap */
+    }
+
+    /* CSS khusus untuk media print */
+    @media print {
+      .button-container {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Laporan Penjualan</h2>
+
+    <table id="penjualan-table">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Nama Pembeli</th>
+          <th>Layanan</th>
+          <th>Harga</th>
+          <th>Status Pesanan</th>
+          <th>Tanggal Pemesanan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data transaksi akan dimuat di sini -->
+      </tbody>
+    </table>
+
+    <div class="button-container">
+      <button onclick="window.print()">Cetak Laporan</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4iENZs-AuyD2gLGkooV5bbRlaQq58Wn4",
+      authDomain: "websitesepatu-ad623.firebaseapp.com",
+      projectId: "websitesepatu-ad623",
+      storageBucket: "websitesepatu-ad623.appspot.com",
+      messagingSenderId: "824822131041",
+      appId: "1:824822131041:web:dcfb1626dbeca123f43d20"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    loadLaporanPenjualan();
+
+    async function loadLaporanPenjualan() {
+      const tableBody = document.getElementById("penjualan-table").getElementsByTagName("tbody")[0];
+
+      const transaksiRef = ref(db, "pesanan");
+
+      try {
+        const snapshot = await get(transaksiRef);
+
+        if (!snapshot.exists()) {
+          tableBody.innerHTML = "<tr><td colspan='6'>Tidak ada data penjualan.</td></tr>";
+          return;
+        }
+
+        const data = snapshot.val();
+        let no = 1;
+
+        // Clear the table before inserting new data
+        tableBody.innerHTML = '';
+
+        for (let id in data) {
+          const transaksi = data[id];
+
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${no++}</td>
+            <td>${transaksi.nama ?? "Tidak tersedia"}</td>
+            <td>${transaksi.layanan ?? "Tidak tersedia"}</td>
+            <td>Rp ${transaksi.harga?.toLocaleString() ?? "0"}</td>
+            <td>${transaksi.status ?? "Tidak tersedia"}</td>
+            <td>${transaksi.tanggalPemesanan ?? "-"}</td>
+          `;
+
+          tableBody.appendChild(row);
+        }
+      } catch (error) {
+        console.error("Gagal memuat data:", error);
+        tableBody.innerHTML = "<tr><td colspan='6'>Gagal memuat data penjualan.</td></tr>";
+      }
+    }
+  </script>
+
+</body>
+</html>

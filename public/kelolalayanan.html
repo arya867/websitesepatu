@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelola Layanan - Udin Cleaning Shoes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 800px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #003366;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background-color: #00509e;
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #003366;
+      margin-top: 1rem;
+    }
+
+    /* Tabel Layanan */
+    .service-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+
+    .service-table th, .service-table td {
+      border: 1px solid #ddd;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .service-table th {
+      background-color: #003366;
+      color: white;
+    }
+
+    .service-table tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .service-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .service-actions button {
+      padding: 0.5rem 1rem;
+      font-size: 14px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .service-actions button:hover {
+      background-color: #00509e;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 400px;
+      max-width: 100%;
+    }
+
+    .modal .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .modal button {
+      width: auto;
+      margin-right: 10px;
+    }
+
+    .modal .close-btn {
+      background-color: #ff5e00;
+      color: white;
+    }
+
+    .modal .save-btn {
+      background-color: #003366;
+      color: white;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    .search-bar input {
+      width: 60%;
+      padding: 0.8rem;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    /* Tombol Tambah Layanan */
+    #btn-add {
+      width: auto;
+      margin-top: 1rem;
+      background-color: #003366;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #btn-add:hover {
+      background-color: #00509e;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2> Kelola Layanan - Udin Cleaning Shoes</h2>
+
+    <!-- Tombol Tambah Layanan -->
+    <button id="btn-add">Tambah Layanan</button>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="search-layanan" placeholder="Cari layanan...">
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">Memuat layanan...</div>
+
+    <!-- Tabel Layanan -->
+    <table id="service-table" class="service-table">
+      <thead>
+        <tr>
+          <th>Nama Layanan</th>
+          <th>Harga (Rp)</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="service-list"></tbody>
+    </table>
+  </div>
+
+  <!-- Modal for Add Service -->
+  <div id="add-service-modal" class="modal">
+    <div class="modal-content">
+      <h3>Tambah Layanan</h3>
+      <div class="form-group">
+        <label for="nama-layanan-modal">Nama Layanan:</label>
+        <input type="text" id="nama-layanan-modal" placeholder="Masukkan nama layanan">
+      </div>
+
+      <div class="form-group">
+        <label for="harga-layanan-modal">Harga Layanan (Rp):</label>
+        <input type="number" id="harga-layanan-modal" placeholder="Masukkan harga layanan">
+      </div>
+
+      <button id="btn-save" class="save-btn">Simpan</button>
+      <button id="btn-close" class="close-btn">Batal</button>
+    </div>
+  </div>
+
+  <!-- Modal for Edit Service -->
+  <div id="edit-service-modal" class="modal">
+    <div class="modal-content">
+      <h3>Edit Layanan</h3>
+      <div class="form-group">
+        <label for="nama-layanan-edit">Nama Layanan:</label>
+        <input type="text" id="nama-layanan-edit" placeholder="Masukkan nama layanan">
+      </div>
+
+      <div class="form-group">
+        <label for="harga-layanan-edit">Harga Layanan (Rp):</label>
+        <input type="number" id="harga-layanan-edit" placeholder="Masukkan harga layanan">
+      </div>
+
+      <button id="btn-save-edit" class="save-btn">Simpan</button>
+      <button id="btn-close-edit" class="close-btn">Batal</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, getDocs, collection, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4iENZs-AuyD2gLGkooV5bbRlaQq58Wn4",
+      authDomain: "websitesepatu-ad623.firebaseapp.com",
+      projectId: "websitesepatu-ad623",
+      storageBucket: "websitesepatu-ad623.appspot.com",
+      messagingSenderId: "824822131041",
+      appId: "1:824822131041:web:dcfb1626dbeca123f43d20"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const serviceListDiv = document.getElementById("service-list");
+    const btnAdd = document.getElementById("btn-add");
+    const loading = document.getElementById("loading");
+
+    const addServiceModal = document.getElementById("add-service-modal");
+    const editServiceModal = document.getElementById("edit-service-modal");
+
+    const btnCloseAdd = document.getElementById("btn-close");
+    const btnSaveAdd = document.getElementById("btn-save");
+
+    const btnCloseEdit = document.getElementById("btn-close-edit");
+    const btnSaveEdit = document.getElementById("btn-save-edit");
+
+    const namaLayananModal = document.getElementById("nama-layanan-modal");
+    const hargaLayananModal = document.getElementById("harga-layanan-modal");
+
+    const namaLayananEdit = document.getElementById("nama-layanan-edit");
+    const hargaLayananEdit = document.getElementById("harga-layanan-edit");
+
+    let serviceIdToEdit = null;
+
+    // Load the existing services from Firestore
+    loadServices();
+
+    async function loadServices() {
+      loading.style.display = "block";
+      const servicesCollectionRef = collection(db, "layanan");
+      const snapshot = await getDocs(servicesCollectionRef);
+      const services = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // Clear previous services
+      serviceListDiv.innerHTML = '';
+
+      if (services.length === 0) {
+        serviceListDiv.innerHTML = "<tr><td colspan='3'>Tidak ada layanan tersedia.</td></tr>";
+        loading.style.display = "none";
+        return;
+      }
+
+      // Display the services
+      services.forEach(service => {
+        const serviceItem = document.createElement("tr");
+
+        serviceItem.innerHTML = `
+          <td>${service.nama}</td>
+          <td>Rp ${service.harga.toLocaleString()}</td>
+          <td class="service-actions">
+            <button class="btn-edit" data-id="${service.id}">Edit</button>
+            <button class="btn-delete" data-id="${service.id}">Hapus</button>
+          </td>
+        `;
+
+        // Add Edit and Delete functionality
+        const btnEdit = serviceItem.querySelector(".btn-edit");
+        const btnDelete = serviceItem.querySelector(".btn-delete");
+
+        btnEdit.addEventListener("click", () => openEditModal(service));
+        btnDelete.addEventListener("click", () => deleteService(service.id));
+
+        serviceListDiv.appendChild(serviceItem);
+      });
+
+      loading.style.display = "none";
+    }
+
+    // Open modal to add new service
+    btnAdd.addEventListener("click", () => {
+      addServiceModal.style.display = "flex";
+    });
+
+    // Open modal to edit service
+    function openEditModal(service) {
+      serviceIdToEdit = service.id;
+      namaLayananEdit.value = service.nama;
+      hargaLayananEdit.value = service.harga;
+
+      editServiceModal.style.display = "flex";
+    }
+
+    // Close modals
+    btnCloseAdd.addEventListener("click", () => {
+      addServiceModal.style.display = "none";
+    });
+
+    btnCloseEdit.addEventListener("click", () => {
+      editServiceModal.style.display = "none";
+    });
+
+    // Save new service to Firestore
+    btnSaveAdd.addEventListener("click", async () => {
+      const namaLayanan = namaLayananModal.value;
+      const hargaLayanan = hargaLayananModal.value;
+
+      if (!namaLayanan || !hargaLayanan) {
+        alert("Nama layanan dan harga harus diisi!");
+        return;
+      }
+
+      try {
+        const servicesCollectionRef = collection(db, "layanan");
+        await addDoc(servicesCollectionRef, {
+          nama: namaLayanan,
+          harga: parseInt(hargaLayanan)
+        });
+
+        // Clear the form and reload the services
+        namaLayananModal.value = '';
+        hargaLayananModal.value = '';
+        loadServices();
+
+        // Close the modal
+        addServiceModal.style.display = "none";
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
+    });
+
+    // Save updated service
+    btnSaveEdit.addEventListener("click", async () => {
+      const namaLayanan = namaLayananEdit.value;
+      const hargaLayanan = hargaLayananEdit.value;
+
+      if (!namaLayanan || !hargaLayanan) {
+        alert("Nama layanan dan harga harus diisi!");
+        return;
+      }
+
+      try {
+        const serviceRef = doc(db, "layanan", serviceIdToEdit);
+        await updateDoc(serviceRef, {
+          nama: namaLayanan,
+          harga: parseInt(hargaLayanan)
+        });
+
+        loadServices();
+        editServiceModal.style.display = "none";
+      } catch (error) {
+        console.error("Error updating document: ", error);
+      }
+    });
+
+    // Delete service
+    async function deleteService(serviceId) {
+      if (confirm("Apakah Anda yakin ingin menghapus layanan ini?")) {
+        try {
+          const serviceRef = doc(db, "layanan", serviceId);
+          await deleteDoc(serviceRef);
+          loadServices();
+        } catch (error) {
+          console.error("Error deleting document: ", error);
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

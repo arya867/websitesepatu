@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sikattt Udin's - Cleaning Shoes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Arial', sans-serif;
+      height: 100%;
+      color: #333;
+      background-color: #f4f4f4;
+    }
+
+    .hero {
+      height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      overflow: hidden;
+    }
+
+    /* Background slide effect */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-size: cover;
+      background-position: center;
+      animation: slide 15s infinite alternate;
+      z-index: 1;
+    }
+
+    @keyframes slide {
+      0% { background-image: url('Background1.png'); }
+      25% { background-image: url('Background2.png'); }
+      50% { background-image: url('Background3.png'); }
+      75% { background-image: url('Background4.png'); }
+      100% { background-image: url('Background1.png'); }
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4); /* Efek overlay lebih gelap */
+      z-index: 2;
+    }
+
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 3;
+      background-color: #003366; /* Biru Tua */
+    }
+
+    header h1 {
+      font-size: 30px;
+      color: white;
+      margin: 0;
+    }
+
+    .auth-buttons a {
+      background-color: #ffffff;
+      color: #003366;
+      padding: 0.6rem 1.2rem;
+      margin-left: 10px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .auth-buttons a:hover {
+      background-color: #0066cc;
+      color: white;
+    }
+
+    main {
+      background: #ffffff;
+      padding: 4rem 2rem;
+      margin-top: 0;
+      color: #003366;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: #003366;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .menu-item {
+      background: #f4f4f4;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu-item h3 {
+      margin-bottom: 1rem;
+      font-size: 20px;
+      color: #003366;
+    }
+
+    .info {
+      display: none;
+      transition: all 0.3s ease-in-out;
+      opacity: 0;
+    }
+
+    .menu-item:hover .info {
+      display: block;
+      opacity: 1;
+      max-height: 150px;
+    }
+
+    footer {
+      background: #003366;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      color: #fff;
+    }
+
+    footer .social-icons a {
+      color: white;
+      font-size: 20px;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    footer .social-icons a:hover {
+      color: #0066cc;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .menu-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="overlay"></div>
+
+    <header>
+      <h1>Sikattt Udin's</h1>
+      <div class="auth-buttons">
+        <a href="loginadmin.html">Admin</a>
+        <a href="login.html">Login</a>
+        <a href="Register.html">Register</a>
+      </div>
+    </header>
+
+  </div>
+
+  <main>
+    <h2>Layanan Kami</h2>
+    <div class="menu-grid">
+      <div class="menu-item">
+        <h3>Cuci Sepatu Standart</h3>
+        <div class="info">
+          <p>Layanan pembersihan sepatu dasar dengan teknik dan bahan yang aman untuk berbagai jenis bahan sepatu.</p>
+        </div>
+      </div>
+      <div class="menu-item">
+        <h3>Deep Cleaning</h3>
+        <div class="info">
+          <p>Pembersihan mendalam hingga ke bagian terkecil sepatu. Cocok untuk sepatu dengan noda membandel.</p>
+        </div>
+      </div>
+      <div class="menu-item">
+        <h3>Repaint</h3>
+        <div class="info">
+          <p>Pengecatan ulang bagian sepatu untuk memperbarui warna yang pudar atau rusak.</p>
+        </div>
+      </div>
+      <div class="menu-item">
+        <h3>Repairing</h3>
+        <div class="info">
+          <p>Perbaikan kerusakan ringan seperti sol lepas, jahitan terputus, dan lainnya agar sepatu kembali layak pakai.</p>
+        </div>
+      </div>
+      <div class="menu-item">
+        <h3>Unyellowing</h3>
+        <div class="info">
+          <p>Proses pemutihan bagian midsole atau outsole sepatu yang menguning, dengan bahan aman tanpa merusak material.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>📞 0857-3602-5112 | 📍 Jl. Gelora BungTomo Samping STK, Surabaya</p>
+    <p>&copy; 2025 Sikattt Udin</p>
+ 
+  </footer>
+
+</body>
+</html>
