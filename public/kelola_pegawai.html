@@ -1,151 +1,180 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Kelola Pelanggan - Udin Cleaning Shoes</title>
-    <style>
-      /* Styling tetap sama */
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f9;
-        padding: 20px;
-      }
-      header {
-        background-color: #003366;
-        color: white;
-        padding: 15px;
-        text-align: center;
-        border-radius: 5px;
-        margin-bottom: 20px;
-      }
-      .form-container {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-      }
-      .form-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 5px;
-        width: 400px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-      .form-content input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-      }
-      .form-content button {
-        width: 100%;
-        padding: 10px;
-        background-color: #003366;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      .form-content button:hover {
-        background-color: #0066cc;
-      }
-      h3 {
-        margin-top: 30px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-      }
-      table, th, td {
-        border: 1px solid #ddd;
-      }
-      th, td {
-        padding: 10px;
-        text-align: left;
-      }
-      th {
-        background-color: #f2f2f2;
-      }
-      .action-btn {
-        margin-right: 5px;
-        padding: 5px 10px;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-      }
-      .edit-btn {
-        background-color: #007bff;
-        color: white;
-      }
-      .delete-btn {
-        background-color: #dc3545;
-        color: white;
-      }
-      .edit-btn:hover, .delete-btn:hover {
-        opacity: 0.8;
-      }
-      .search-container {
-        margin-top: 20px;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-      }
-      .search-container input {
-        width: 85%;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-      }
-      .search-container button {
-        width: 15%;
-        padding: 10px;
-        background-color: #003366;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      .search-container button:hover {
-        background-color: #0066cc;
-      }
-      .close-btn {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-top: 10px;
-        width: 100%;
-      }
-      .close-btn:hover {
-        background-color: #c82333;
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kelola Pegawai - Udin Cleaning Shoes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 20px;
+    }
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .primary-btn {
+      padding: 10px 15px;
+      background-color:  #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .primary-btn:hover {
+      background-color: #003366;
+    }
+    .form-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .form-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 400px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-content input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    .form-content button {
+      width: 100%;
+      padding: 10px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .form-content button:hover {
+      background-color:  #003366;
+    }
+    h3 {
+      margin-top: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .action-btn {
+      margin-right: 5px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      color: white;
+    }
+    .edit-btn {
+      background-color:  #003366;
+    }
+    .edit-btn:hover {
+      background-color: #003366;
+    }
+    .delete-btn {
+      background-color: #dc3545;
+    }
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+    .search-container {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .search-container input {
+      width: 85%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    .search-container button {
+      width: 15%;
+      padding: 10px;
+      background-color:  #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .search-container button:hover {
+      background-color: #003366;
+    }
+    .close-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .close-btn:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
 <body>
 
   <header>
-    <h1>Kelola Pelanggan - Udin Cleaning Shoes</h1>
+    <h1>Kelola Pegawai - Udin Cleaning Shoes</h1>
   </header>
+
+  <button id="show-form-btn" class="primary-btn">Tambah Pegawai</button>
+
+  <!-- Modal Form -->
+  <div class="form-container" id="form-container">
+    <div class="form-content">
+      <h3 id="form-title">Tambah Pegawai</h3>
+      <form id="add-pegawai-form">
+        <input type="text" id="nama" placeholder="Nama Pegawai" required />
+        <input type="email" id="email" placeholder="Email Pegawai" required />
+        <input type="text" id="alamat" placeholder="Alamat Pegawai" required />
+        <input type="text" id="no-telepon" placeholder="Nomor Telepon Pegawai" required />
+        <button type="submit" id="submit-button">Tambah Pegawai</button>
+      </form>
+      <button id="close-modal-btn" class="close-btn">Tutup</button>
+    </div>
+  </div>
 
   <!-- Search Bar -->
   <div class="search-container">
-    <input type="text" id="search-bar" placeholder="Cari Pelanggan..." />
+    <input type="text" id="search-bar" placeholder="Cari Pegawai..." />
     <button id="search-btn">Cari</button>
   </div>
 
-  <h3>Daftar Pelanggan</h3>
-  <table id="pelanggan-table">
+  <h3>Daftar Pegawai</h3>
+  <table id="pegawai-table">
     <thead>
       <tr>
         <th>Nama</th>
@@ -156,39 +185,24 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Data pelanggan akan muncul di sini -->
+      <!-- Data pegawai akan muncul di sini -->
     </tbody>
   </table>
-
-  <!-- Form untuk edit data pelanggan -->
-  <div class="form-container" id="form-container">
-    <div class="form-content">
-      <h3>Edit Pelanggan</h3>
-      <input type="text" id="edit-nama" placeholder="Nama" />
-      <input type="email" id="edit-email" placeholder="Email" />
-      <input type="text" id="edit-alamat" placeholder="Alamat" />
-      <input type="text" id="edit-noTelepon" placeholder="Nomor Telepon" />
-      <button id="save-btn">Simpan</button>
-      <button id="close-btn" class="close-btn">Tutup</button>
-    </div>
-  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import {
       getFirestore,
       collection,
+      addDoc,
       getDocs,
-      updateDoc,
-      deleteDoc,
-      doc,
       query,
-      orderBy
+      orderBy,
+      doc,
+      updateDoc,
+      deleteDoc
     } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-    import {
-      getAuth,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB4iENZs-AuyD2gLGkooV5bbRlaQq58Wn4",
@@ -203,111 +217,140 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    const tableBody = document.querySelector("#pelanggan-table tbody");
+    const form = document.getElementById("add-pegawai-form");
+    const tableBody = document.querySelector("#pegawai-table tbody");
+    const formTitle = document.getElementById("form-title");
+    const submitButton = document.getElementById("submit-button");
     const searchBar = document.getElementById("search-bar");
     const formContainer = document.getElementById("form-container");
-    const closeBtn = document.getElementById("close-btn");
+    const showFormBtn = document.getElementById("show-form-btn");
+    const closeModalBtn = document.getElementById("close-modal-btn");
+
+    let editId = null;
+    let currentUser = null;
+    let pegawaiData = [];
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        loadPelangganData();
+        currentUser = user;
+        loadPegawaiData();
       } else {
         alert("Silakan login sebagai admin untuk mengakses halaman ini.");
         window.location.href = "/login.html";
       }
     });
 
-    async function loadPelangganData() {
+    showFormBtn.addEventListener("click", () => {
+      formContainer.style.display = "flex";
+    });
+
+    closeModalBtn.addEventListener("click", () => {
+      formContainer.style.display = "none";
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nama = document.getElementById("nama").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const alamat = document.getElementById("alamat").value.trim();
+      const noTelepon = document.getElementById("no-telepon").value.trim();
+
+      if (!nama || !email || !alamat || !noTelepon) {
+        alert("Semua field harus diisi!");
+        return;
+      }
+
+      try {
+        if (editId) {
+          const pegawaiRef = doc(db, "pegawai", editId);
+          await updateDoc(pegawaiRef, { nama, email, alamat, noTelepon });
+          editId = null;
+          formTitle.textContent = "Tambah Pegawai";
+          submitButton.textContent = "Tambah Pegawai";
+        } else {
+          await addDoc(collection(db, "pegawai"), { nama, email, alamat, noTelepon });
+        }
+
+        form.reset();
+        formContainer.style.display = "none";
+        await loadPegawaiData();
+      } catch (err) {
+        console.error("Gagal menyimpan data:", err);
+        alert("Gagal menyimpan data pegawai.");
+      }
+    });
+
+    async function loadPegawaiData() {
       tableBody.innerHTML = "";
       try {
-        const q = query(collection(db, "pengguna"), orderBy("nama"));
+        const q = query(collection(db, "pegawai"), orderBy("nama"));
         const snapshot = await getDocs(q);
-        snapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          const id = docSnap.id;
-
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td><span class="text">${data.nama || '-'}</span></td>
-            <td><span class="text">${data.email || '-'}</span></td>
-            <td><span class="text">${data.alamat || '-'}</span></td>
-            <td><span class="text">${data.noTelepon || '-'}</span></td>
-            <td>
-              <button class="btn edit-btn">Edit</button>
-              <button class="btn delete-btn">Hapus</button>
-            </td>
-          `;
-
-          const [editBtn, deleteBtn] = row.querySelectorAll("button");
-
-          editBtn.onclick = () => {
-            document.getElementById("edit-nama").value = data.nama;
-            document.getElementById("edit-email").value = data.email;
-            document.getElementById("edit-alamat").value = data.alamat;
-            document.getElementById("edit-noTelepon").value = data.noTelepon;
-
-            formContainer.style.display = "flex";
-            document.getElementById("save-btn").onclick = async () => {
-              const newData = {
-                nama: document.getElementById("edit-nama").value,
-                email: document.getElementById("edit-email").value,
-                alamat: document.getElementById("edit-alamat").value,
-                noTelepon: document.getElementById("edit-noTelepon").value
-              };
-
-              try {
-                await updateDoc(doc(db, "pengguna", id), newData);
-                loadPelangganData();
-                formContainer.style.display = "none";
-              } catch (err) {
-                console.error("Gagal update:", err);
-                alert("Gagal memperbarui data.");
-              }
-            };
-          };
-
-          deleteBtn.onclick = async () => {
-            if (confirm("Yakin ingin menghapus data pelanggan ini?")) {
-              try {
-                await deleteDoc(doc(db, "pengguna", id));
-                loadPelangganData(); // refresh data
-              } catch (err) {
-                console.error("Gagal menghapus:", err);
-                alert("Gagal menghapus data pelanggan.");
-              }
-            }
-          };
-
-          tableBody.appendChild(row);
+        pegawaiData = [];
+        snapshot.forEach((docItem) => {
+          const data = docItem.data();
+          pegawaiData.push({ id: docItem.id, ...data });
         });
+        displayPegawaiData(pegawaiData);
       } catch (err) {
-        console.error("Gagal mengambil data pelanggan:", err);
-        alert("Gagal memuat data pelanggan.");
+        console.error("Gagal mengambil data pegawai:", err);
+        alert("Gagal memuat data pegawai.");
       }
     }
 
-    closeBtn.onclick = () => {
-      formContainer.style.display = "none";
-    };
-
-    document.getElementById("search-btn").addEventListener("click", searchPelanggan);
-
-    function searchPelanggan() {
-      const searchText = searchBar.value.toLowerCase();
-      const rows = document.querySelectorAll("#pelanggan-table tbody tr");
-      rows.forEach(row => {
-        const cells = row.querySelectorAll("td");
-        const nama = cells[0].textContent.toLowerCase();
-        const email = cells[1].textContent.toLowerCase();
-        const alamat = cells[2].textContent.toLowerCase();
-        const noTelepon = cells[3].textContent.toLowerCase();
-        if (nama.includes(searchText) || email.includes(searchText) || alamat.includes(searchText) || noTelepon.includes(searchText)) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
+    function displayPegawaiData(data) {
+      tableBody.innerHTML = "";
+      data.forEach((pegawai) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${pegawai.nama}</td>
+          <td>${pegawai.email}</td>
+          <td>${pegawai.alamat}</td>
+          <td>${pegawai.noTelepon}</td>
+          <td>
+            <button class="action-btn edit-btn" onclick='editPegawai("${pegawai.id}", ${JSON.stringify(pegawai).replace(/'/g, "\\'")})'>Edit</button>
+            <button class="action-btn delete-btn" onclick='hapusPegawai("${pegawai.id}")'>Hapus</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
       });
     }
+
+    document.getElementById("search-btn").addEventListener("click", searchPegawai);
+
+    function searchPegawai() {
+      const searchText = searchBar.value.toLowerCase();
+      const filteredData = pegawaiData.filter(pegawai => 
+        pegawai.nama.toLowerCase().includes(searchText) ||
+        pegawai.email.toLowerCase().includes(searchText) ||
+        pegawai.alamat.toLowerCase().includes(searchText) ||
+        pegawai.noTelepon.includes(searchText)
+      );
+      displayPegawaiData(filteredData);
+    }
+
+    window.editPegawai = (id, data) => {
+      document.getElementById("nama").value = data.nama;
+      document.getElementById("email").value = data.email;
+      document.getElementById("alamat").value = data.alamat;
+      document.getElementById("no-telepon").value = data.noTelepon;
+      editId = id;
+      formTitle.textContent = "Edit Pegawai";
+      submitButton.textContent = "Simpan Perubahan";
+      formContainer.style.display = "flex";
+    };
+
+    window.hapusPegawai = async (id) => {
+      if (confirm("Yakin ingin menghapus data pegawai ini?")) {
+        try {
+          await deleteDoc(doc(db, "pegawai", id));
+          await loadPegawaiData();
+        } catch (err) {
+          console.error("Gagal menghapus pegawai:", err);
+          alert("Gagal menghapus data pegawai.");
+        }
+      }
+    };
   </script>
+
 </body>
 </html>
